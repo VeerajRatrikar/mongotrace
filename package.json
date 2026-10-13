@@ -1,0 +1,27 @@
+{
+  "name": "mongotrace",
+  "version": "1.0.0",
+  "description": "MongoTrace — Self-Evolving Digital Evidence Intelligence Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node check_db.js",
+    "test": "node tests/run_tests.js"
+  },
+  "keywords": [
+    "mongodb",
+    "digital-forensics",
+    "evidence-management",
+    "incident-reconstruction"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "mongodb": "^7.7.0",
+    "multer": "^2.4.0"
+  }
+}

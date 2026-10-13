@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MongoTrace — Digital Evidence Intelligence Platform</title>
+  <meta name="description" content="Digital evidence intelligence, incident reconstruction, and schema benchmarking platform powered by MongoDB.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=enterprise_v1">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="light-theme">
+
+  <div class="app-shell">
+    
+    <!-- ============================================================== -->
+    <!-- COMPACT PERSISTENT LEFT SIDEBAR -->
+    <!-- ============================================================== -->
+    <aside class="app-sidebar">
+      <!-- Brand & MongoDB Official Logo -->
+      <div class="sidebar-brand">
+        <svg class="mongo-official-logo" viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.0003 0.125C11.8503 0.281 10.7093 1.5 9.46429 2.834C6.61029 5.897 4.87629 8.358 3.85429 10.793C2.52229 13.97 2.49029 16.792 3.75429 19.468C4.87629 21.843 6.97429 23.447 9.78229 24.082C10.6783 24.28 11.6263 24.343 12.3443 24.239C12.5013 24.218 12.6263 24.187 12.6263 24.166C12.6263 24.145 12.5543 23.364 12.4703 22.427C12.2723 20.25 12.2403 18.062 12.3543 14.739C12.4283 12.604 12.4803 12.177 12.6263 12.166C12.7303 12.156 12.7823 12.427 12.8863 13.562C13.1263 16.208 13.7193 19.344 14.4593 21.937C14.6783 22.708 14.8653 23.354 14.8763 23.375C14.8863 23.396 15.2713 23.166 15.7303 22.864C18.0843 21.323 19.7513 18.906 20.2923 16.27C20.6263 14.635 20.5423 12.791 20.0423 11.135C19.1153 8.083 16.6153 4.791 12.9693 1.791C12.4903 1.406 12.0843 1.052 12.0633 1.01C12.0423 0.968 12.0113 0.572 12.0003 0.125Z" fill="#00684A"/>
+          <path d="M12.0003 0.125L12.0633 1.01C12.0843 1.052 12.4903 1.406 12.9693 1.791C16.6153 4.791 19.1153 8.083 20.0423 11.135C20.5423 12.791 20.6263 14.635 20.2923 16.27C19.7513 18.906 18.0843 21.323 15.7303 22.864C15.2713 23.166 14.8863 23.396 14.8763 23.375C14.8653 23.354 14.6783 22.708 14.4593 21.937C13.7193 19.344 13.1263 16.208 12.8863 13.562C12.7823 12.427 12.7303 12.156 12.6263 12.166C12.4803 12.177 12.4283 12.604 12.3543 14.739C12.2403 18.062 12.2723 20.25 12.4703 22.427C12.5543 23.364 12.6263 24.145 12.6263 24.166C12.6263 24.187 12.5013 24.218 12.3443 24.239C12.1873 24.26 12.0623 24.27 12.0003 24.27V0.125Z" fill="#00ED64"/>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-name">MongoTrace</span>
+          <span class="brand-sub">Evidence Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links (9 Required Sections) -->
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="tab-overview" id="nav-overview">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-investigations" id="nav-investigations">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span>Investigations</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-evidence" id="nav-evidence">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Evidence Explorer</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-timeline" id="nav-timeline">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Timeline</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-entities" id="nav-entities">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span>Entity Relationships</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-ingestion" id="nav-ingestion">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Ingestion</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-integrity" id="nav-integrity">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 11 12 14 22 4"/></svg>
+          <span>Integrity & Audit</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-experiments" id="nav-experiments">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.89 16.5A2 2 0 0 0 6.55 19.5h10.9a2 2 0 0 0 1.66-3L14 9.31V2"/></svg>
+          <span>Schema Experiments</span>
+        </button>
+
+        <button class="nav-item" data-tab="tab-settings" id="nav-settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          <span>MongoDB Database</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer: Direct MongoDB Status -->
+      <div class="sidebar-footer">
+        <div class="footer-db-status">
+          <span class="live-dot"></span>
+          <div class="footer-db-info">
+            <span class="footer-db-host">127.0.0.1:27017</span>
+            <span class="footer-db-name">mongotrace</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============================================================== -->
+    <!-- MAIN WRAPPER: TOPBAR + CONTENT VIEWPORT -->
+    <!-- ============================================================== -->
+    <div class="app-main-wrapper">
+      
+      <!-- Top Bar: Breadcrumbs, Global Search, Context Actions -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <div class="breadcrumb-container" id="appBreadcrumbs">
+            <span class="crumb-root">MongoTrace</span>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-active" id="currentBreadcrumb">Overview</span>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <div class="global-search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search investigations, evidence IDs, hosts, hashes...">
+            <span class="search-kbd">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Active Investigation Selector -->
+          <div class="topbar-select-wrap">
+            <select id="caseSelect" class="select-clean" title="Active Investigation Scope">
+              <option value="">Loading investigations...</option>
+            </select>
+          </div>
+
+          <button id="btnNewInvestigation" class="btn btn-sm btn-primary">+ New Investigation</button>
+          <button id="btnTriggerIngest" class="btn btn-sm btn-outline">Ingest Evidence</button>
+          <button id="btnReseed" class="btn btn-sm btn-ghost" title="Reset sample telemetry">Reset</button>
+        </div>
+      </header>
+
+      <!-- Content Area: The 9 Specific Functional Panels -->
+      <main class="app-content-body">
+
+        <!-- ============================================================== -->
+        <!-- 1. OVERVIEW DASHBOARD -->
+        <!-- ============================================================== -->
+        <section class="view-panel active" id="tab-overview">
+          <div class="section-title-row">
+            <div>
+              <h2>Overview Dashboard</h2>
+              <p class="section-subtitle">Real-time operational overview of active digital evidence and investigations backed by MongoDB.</p>
+            </div>
+            <div class="header-action-group">
+              <span class="overview-updated font-mono">LIVE WIREDTIGER TELEMETRY</span>
+            </div>
+          </div>
+
+          <!-- 4 KPI Metrics Strip -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-label">ACTIVE INVESTIGATIONS</span>
+              <div class="kpi-val-row">
+                <span class="kpi-value font-mono" id="kpiActiveCases">3</span>
+                <span class="kpi-subtag">Open / Triaged</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-label">TOTAL EVIDENCE RECORDS</span>
+              <div class="kpi-val-row">
+                <span class="kpi-value font-mono" id="kpiTotalEvidence">18</span>
+                <span class="kpi-subtag text-emerald">Persisted in MongoDB</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-label">CAUSALITY GAPS & CONFLICTS</span>
+              <div class="kpi-val-row">
+                <span class="kpi-value font-mono text-amber" id="kpiAnomaliesCount">2</span>
+                <span class="kpi-subtag">Requiring Review</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-label">INTEGRITY STATUS</span>
+              <div class="kpi-val-row">
+                <span class="kpi-value font-mono text-emerald" id="kpiIntegrityStatus">VERIFIED</span>
+                <span class="kpi-subtag">SHA-256 Ledger</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overview Layout: Recent Investigations Table + Analytics -->
+          <div class="overview-dual-grid mt-4">
+            <!-- Left: Recent Investigations Table -->
+            <div class="clean-card">
+              <div class="card-head-row">
+                <h3>Active Incident Investigations</h3>
+                <button class="btn btn-xs btn-outline" onclick="document.getElementById('nav-investigations').click()">View All</button>
+              </div>
+              <div class="table-wrap mt-2">
+                <table class="clean-data-table">
+                  <thead>
+                    <tr>
+                      <th>Investigation</th>
+                      <th>Severity</th>
+                      <th>Status</th>
+                      <th>Investigator</th>
+                      <th>Evidence</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewInvestigationsTableBody">
+                    <tr><td colspan="6" class="text-center text-muted">Loading investigations from MongoDB...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right: Artifact Distribution -->
+            <div class="clean-card">
+              <div class="card-head-row">
+                <h3>Evidence Artifact Distribution</h3>
+                <span class="font-mono text-muted text-xs">aggregation: $group</span>
+              </div>
+              <div class="artifact-distribution-list mt-2" id="artifactDistributionList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Recent Detection Findings & Recent Evidence -->
+          <div class="overview-dual-grid mt-4">
+            <div class="clean-card">
+              <div class="card-head-row">
+                <h3>Recent Detection Findings</h3>
+                <span class="badge-tag blue font-mono">MITRE ATT&CK</span>
+              </div>
+              <div class="findings-feed-list mt-2" id="overviewFindingsList">
+                <p class="placeholder-note">Loading detection findings...</p>
+              </div>
+            </div>
+
+            <div class="clean-card">
+              <div class="card-head-row">
+                <h3>Recent Evidence Telemetry</h3>
+                <button class="btn btn-xs btn-outline" onclick="document.getElementById('nav-evidence').click()">Explore Evidence</button>
+              </div>
+              <div class="evidence-feed-list mt-2" id="overviewEvidenceFeed">
+                <p class="placeholder-note">Loading recent evidence documents...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 2. INVESTIGATIONS MANAGEMENT -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-investigations">
+          <div class="section-title-row">
+            <div>
+              <h2>Investigations Management</h2>
+              <p class="section-subtitle">Full lifecycle investigation management persisted to the <code>investigations</code> collection in MongoDB.</p>
+            </div>
+            <button class="btn btn-primary" id="btnOpenCreateInvModal">+ Create Investigation</button>
+          </div>
+
+          <!-- Filters Bar -->
+          <div class="clean-filter-bar mt-3">
+            <div class="filter-group">
+              <input type="text" id="invSearchInput" class="input-field" placeholder="Search investigations..." style="width: 240px;">
+              <select id="invStatusFilter" class="select-field">
+                <option value="ALL">All Statuses</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Closed">Closed</option>
+              </select>
+              <select id="invSeverityFilter" class="select-field">
+                <option value="ALL">All Severities</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+            <span class="font-mono text-muted text-xs" id="invCountLabel">0 investigations</span>
+          </div>
+
+          <!-- Investigations Table -->
+          <div class="table-wrap mt-3">
+            <table class="clean-data-table">
+              <thead>
+                <tr>
+                  <th>Investigation ID</th>
+                  <th>Title</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>Threat Actor</th>
+                  <th>Investigator</th>
+                  <th>Evidence</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="investigationsTableBody">
+                <tr><td colspan="9" class="text-center text-muted">Loading investigations...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Investigation Detail Panel (Tabs: Summary, Timeline, Evidence, Entities, Notes, Audit) -->
+          <div class="clean-card mt-4 hidden" id="investigationDetailContainer">
+            <div class="card-head-row">
+              <div>
+                <span class="font-mono text-emerald text-xs" id="detInvId">INV-2026-0881</span>
+                <h3 id="detInvTitle">Investigation Details</h3>
+              </div>
+              <button class="btn btn-xs btn-outline" id="btnCloseInvDetail">Close Panel</button>
+            </div>
+
+            <!-- Subtabs -->
+            <div class="subtab-bar mt-2">
+              <button class="subtab-btn active" data-subtab="inv-sub-summary">Summary</button>
+              <button class="subtab-btn" data-subtab="inv-sub-evidence">Evidence Items</button>
+              <button class="subtab-btn" data-subtab="inv-sub-notes">Investigation Notes</button>
+              <button class="subtab-btn" data-subtab="inv-sub-audit">Audit Trail</button>
+            </div>
+
+            <!-- Subtab: Summary -->
+            <div class="subtab-content active" id="inv-sub-summary">
+              <div class="detail-summary-grid mt-3">
+                <div class="info-block">
+                  <span class="info-label">DESCRIPTION:</span>
+                  <p id="detInvDesc" class="info-text">-</p>
+                </div>
+                <div class="info-block">
+                  <span class="info-label">ASSIGNED INVESTIGATOR:</span>
+                  <p id="detInvLead" class="info-text font-mono">-</p>
+                </div>
+                <div class="info-block">
+                  <span class="info-label">THREAT ACTOR:</span>
+                  <p id="detInvActor" class="info-text font-mono">-</p>
+                </div>
+                <div class="info-block">
+                  <span class="info-label">TIMESTAMPS:</span>
+                  <p id="detInvTimestamps" class="info-text font-mono text-xs">-</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subtab: Evidence -->
+            <div class="subtab-content" id="inv-sub-evidence">
+              <div class="table-wrap mt-3">
+                <table class="clean-data-table">
+                  <thead>
+                    <tr>
+                      <th>Evidence ID</th>
+                      <th>Type</th>
+                      <th>Title</th>
+                      <th>Host</th>
+                      <th>Severity</th>
+                      <th>Version</th>
+                      <th>Hash</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detInvEvidenceTableBody">
+                    <tr><td colspan="7" class="text-center text-muted">No evidence loaded.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Subtab: Notes -->
+            <div class="subtab-content" id="inv-sub-notes">
+              <div class="notes-workspace mt-3">
+                <div class="notes-list" id="detInvNotesList">
+                  <p class="placeholder-note">No notes recorded yet.</p>
+                </div>
+                <form id="formAddInvNote" class="note-add-form mt-3">
+                  <textarea id="inputNewNoteText" class="textarea-field" rows="2" placeholder="Add an investigator observation or hypothesis..." required></textarea>
+                  <button type="submit" class="btn btn-sm btn-primary mt-2">Append Note</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Subtab: Audit Trail -->
+            <div class="subtab-content" id="inv-sub-audit">
+              <div class="audit-list-box mt-3" id="detInvAuditList">
+                <p class="placeholder-note">Loading audit logs...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 3. EVIDENCE EXPLORER -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-evidence">
+          <div class="section-title-row">
+            <div>
+              <h2>Evidence Explorer</h2>
+              <p class="section-subtitle">Browse, filter, and inspect flexible BSON evidence documents with cryptographic provenance.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-outline" id="btnExportEvidenceJson">Export JSON</button>
+              <button class="btn btn-outline" id="btnExportEvidenceCsv">Export CSV</button>
+              <button class="btn btn-primary" onclick="document.getElementById('nav-ingestion').click()">+ Ingest New Evidence</button>
+            </div>
+          </div>
+
+          <!-- Clean Filter Bar -->
+          <div class="clean-filter-bar mt-3">
+            <div class="filter-group">
+              <input type="text" id="evidenceSearchInput" class="input-field" placeholder="Search ID, host, user, hash..." style="width: 240px;">
+              <select id="evidenceTypeFilter" class="select-field">
+                <option value="ALL">All Artifact Types</option>
+                <option value="SECURITY_EVENT">Security Event</option>
+                <option value="PROCESS_SPAWN">Process Spawn</option>
+                <option value="NETWORK_FLOW">Network Flow</option>
+                <option value="FILE_INTEGRITY">File Integrity</option>
+                <option value="APPLICATION_LOG">Application Log</option>
+              </select>
+              <select id="evidenceSeverityFilter" class="select-field">
+                <option value="ALL">All Severities</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+            <span class="font-mono text-muted text-xs" id="evidenceCountLabel">0 records</span>
+          </div>
+
+          <!-- Evidence Table -->
+          <div class="table-wrap mt-3">
+            <table class="clean-data-table">
+              <thead>
+                <tr>
+                  <th>Evidence ID</th>
+                  <th>Artifact Class</th>
+                  <th>Title</th>
+                  <th>Source Host</th>
+                  <th>Severity</th>
+                  <th>Ver.</th>
+                  <th>SHA-256 Hash</th>
+                  <th>Event Timestamp</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="evidenceTableBody">
+                <tr><td colspan="9" class="text-center text-muted">Loading evidence documents from MongoDB...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Side Drawer for Selected Evidence Document -->
+          <div class="node-drawer collapsed" id="evidenceDrawer">
+            <div class="drawer-header">
+              <div>
+                <span class="font-mono text-xs text-muted" id="evDrawerSub">EVIDENCE ARTIFACT</span>
+                <h4 id="evDrawerTitle">Artifact Details</h4>
+              </div>
+              <button id="btnCloseEvDrawer" class="btn btn-xs btn-ghost">✕</button>
+            </div>
+            <div class="drawer-content" id="evDrawerBody">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 4. TIMELINE RECONSTRUCTION -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-timeline">
+          <div class="section-title-row">
+            <div>
+              <h2>Incident Timeline Reconstruction</h2>
+              <p class="section-subtitle">Chronological evidence correlation combining multi-source telemetry to explain how the security incident unfolded.</p>
+            </div>
+            <div class="timeline-controls-bar">
+              <span class="font-mono text-muted text-xs">Event vs. Ingestion Comparison Active</span>
+            </div>
+          </div>
+
+          <!-- Anomalies and Intelligence Highlights Bar -->
+          <div class="timeline-anomaly-summary mt-3">
+            <div class="anomaly-pill-item">
+              <span class="dot-indicator amber"></span>
+              <span id="tlMissingGapsLabel">0 Causality Gaps</span>
+            </div>
+            <div class="anomaly-pill-item">
+              <span class="dot-indicator critical"></span>
+              <span id="tlConflictsLabel">0 Conflicting Signals</span>
+            </div>
+            <div class="anomaly-pill-item">
+              <span class="dot-indicator blue"></span>
+              <span id="tlSequencesLabel">0 Suspicious Sequences</span>
+            </div>
+          </div>
+
+          <!-- Chronological Timeline Stream -->
+          <div class="timeline-stream-container mt-4" id="timelineStream">
+            <p class="placeholder-note">Loading chronological timeline from MongoDB...</p>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 5. ENTITY RELATIONSHIPS -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-entities">
+          <div class="section-title-row">
+            <div>
+              <h2>Entity Relationships Explorer</h2>
+              <p class="section-subtitle">Interactive relationship graph connecting Users, Hosts, IP Addresses, Files, Processes, and Evidence records.</p>
+            </div>
+            <div class="graph-toolbar">
+              <button id="btnZoomIn" class="zoom-btn" title="Zoom in">+</button>
+              <button id="btnZoomOut" class="zoom-btn" title="Zoom out">−</button>
+              <button id="btnGraphFit" class="zoom-btn" title="Fit to screen">⤢</button>
+              <button id="btnHighlightKillChain" class="btn btn-sm btn-outline">Highlight Attack Path</button>
+              <button id="btnToggleEntityView" class="btn btn-sm btn-ghost">Table View</button>
+            </div>
+          </div>
+
+          <!-- Graph Canvas Container -->
+          <div class="graph-canvas-box mt-3" id="entityGraphBox">
+            <div id="graphContainer" class="graph-viewport"></div>
+            
+            <!-- Floating Entity Filter -->
+            <div class="graph-floating-bar">
+              <span class="filter-label">Entities:</span>
+              <button class="pill-btn active" data-etype="ALL">All</button>
+              <button class="pill-btn" data-etype="HOST">Hosts</button>
+              <button class="pill-btn" data-etype="USER">Users</button>
+              <button class="pill-btn" data-etype="IP">IPs</button>
+              <button class="pill-btn" data-etype="PROCESS">Processes</button>
+              <button class="pill-btn" data-etype="FILE">Files</button>
+            </div>
+          </div>
+
+          <!-- Accessible Table View (Toggled via button) -->
+          <div class="table-wrap mt-3 hidden" id="entityTableContainer">
+            <table class="clean-data-table">
+              <thead>
+                <tr>
+                  <th>Entity Type</th>
+                  <th>Identifier / Value</th>
+                  <th>First Seen</th>
+                  <th>Last Seen</th>
+                  <th>Associated Evidence</th>
+                </tr>
+              </thead>
+              <tbody id="entitiesTableBody">
+                <tr><td colspan="5" class="text-center text-muted">Loading entities from MongoDB...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 6. INGESTION WIZARD -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-ingestion">
+          <div class="section-title-row">
+            <div>
+              <h2>Evidence Ingestion Pipeline</h2>
+              <p class="section-subtitle">Production 10-step ingestion engine supporting JSON, JSONL, CSV, and GridFS forensic binary artifacts.</p>
+            </div>
+            <span class="font-mono text-muted text-xs">Job-Tracked Batch Pipeline</span>
+          </div>
+
+          <!-- Ingestion Wizard Card -->
+          <div class="clean-card mt-3">
+            <div class="wizard-step-indicator">
+              <span class="step-badge active">Step 1: Source & Payload</span>
+              <span class="step-arrow">➔</span>
+              <span class="step-badge">Step 2: Preview & Map</span>
+              <span class="step-arrow">➔</span>
+              <span class="step-badge">Step 3: Validate & Persist</span>
+            </div>
+
+            <!-- Step Form -->
+            <div class="wizard-step-body mt-4">
+              <div class="form-row">
+                <div class="form-control" style="flex: 1;">
+                  <label>Target Investigation:</label>
+                  <select id="ingestTargetInvestigation" class="select-field">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+                <div class="form-control" style="flex: 1;">
+                  <label>Source System / Feed:</label>
+                  <select id="ingestSourceSystem" class="select-field">
+                    <option value="EDR_FALCON">CrowdStrike Falcon EDR</option>
+                    <option value="SIEM_SPLUNK">Splunk SIEM Syslog</option>
+                    <option value="CLOUDTRAIL">AWS CloudTrail Security</option>
+                    <option value="ZEEK_NETWORK">Zeek Network Flow Telemetry</option>
+                    <option value="MANUAL_ANALYST">Manual Analyst Entry</option>
+                  </select>
+                </div>
+                <div class="form-control" style="flex: 0.7;">
+                  <label>Payload Format:</label>
+                  <select id="ingestPayloadFormat" class="select-field">
+                    <option value="json">JSON Array</option>
+                    <option value="jsonl">JSON Lines (.jsonl)</option>
+                    <option value="csv">CSV (Comma Separated)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-control mt-3">
+                <div class="payload-header-row">
+                  <label>Telemetry Payload Data (or paste raw records):</label>
+                  <button type="button" class="btn btn-xs btn-ghost" id="btnLoadSamplePayload">Load Sample Incident Payload</button>
+                </div>
+                <textarea id="ingestPayloadText" class="textarea-field font-mono" rows="6" placeholder='[
+  {
+    "title": "Unusual SSH Authentication from Moscow IP",
+    "timestamp": "2026-10-14T02:00:00Z",
+    "severity": "HIGH",
+    "artifactType": "SECURITY_EVENT",
+    "sourceHost": "gateway-ssh-01.corp",
+    "user": "root",
+    "sourceIp": "194.87.139.24"
+  }
+]'></textarea>
+              </div>
+
+              <div class="wizard-actions-row mt-3">
+                <button id="btnPreviewIngest" class="btn btn-primary">Preview & Validate Records</button>
+                <button id="btnOpenGridFSUpload" class="btn btn-outline">+ Upload Binary to GridFS Vault</button>
+              </div>
+            </div>
+
+            <!-- Ingestion Preview & Validation Report (Displayed on click) -->
+            <div class="ingest-preview-result mt-4 hidden" id="ingestPreviewBox">
+              <div class="preview-metrics-strip">
+                <div><span>Total Records:</span> <strong id="prevTotalCount">0</strong></div>
+                <div><span>Valid Records:</span> <strong id="prevValidCount" class="text-emerald">0</strong></div>
+                <div><span>Invalid:</span> <strong id="prevInvalidCount" class="text-rose">0</strong></div>
+                <div><span>Duplicates:</span> <strong id="prevDuplicateCount" class="text-amber">0</strong></div>
+              </div>
+
+              <!-- Preview Table -->
+              <div class="table-wrap mt-3">
+                <table class="clean-data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Title</th>
+                      <th>Timestamp</th>
+                      <th>Severity</th>
+                      <th>Artifact Type</th>
+                      <th>Source Host</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ingestPreviewTableBody"></tbody>
+                </table>
+              </div>
+
+              <div class="confirm-import-row mt-3">
+                <button id="btnConfirmIngest" class="btn btn-primary">Confirm & Persist to MongoDB</button>
+                <span id="ingestStatusNote" class="text-xs text-muted font-mono"></span>
+              </div>
+            </div>
+
+            <!-- Ingestion Job Final Report -->
+            <div class="ingest-final-report mt-4 hidden" id="ingestFinalReportBox">
+              <div class="report-badge-head">
+                <span class="live-dot"></span>
+                <strong>INGESTION JOB PERSISTED TO MONGODB</strong>
+              </div>
+              <div class="report-grid mt-2">
+                <div><span>Job ID:</span> <code class="font-mono text-emerald" id="reportJobId">-</code></div>
+                <div><span>Accepted Records:</span> <strong class="font-mono text-emerald" id="reportAccepted">-</strong></div>
+                <div><span>Rejected Records:</span> <strong class="font-mono text-rose" id="reportRejected">-</strong></div>
+                <div><span>Execution Duration:</span> <strong class="font-mono" id="reportDuration">-</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Ingestion Jobs Table -->
+          <div class="clean-card mt-4">
+            <div class="card-head-row">
+              <h3>Ingestion Job History</h3>
+              <span class="font-mono text-muted text-xs">collection: ingestion_jobs</span>
+            </div>
+            <div class="table-wrap mt-2">
+              <table class="clean-data-table">
+                <thead>
+                  <tr>
+                    <th>Job ID</th>
+                    <th>Target Investigation</th>
+                    <th>Source System</th>
+                    <th>Status</th>
+                    <th>Accepted</th>
+                    <th>Rejected</th>
+                    <th>Duration</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="ingestionJobsTableBody">
+                  <tr><td colspan="8" class="text-center text-muted">Loading job history...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 7. INTEGRITY & AUDIT TRAIL -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-integrity">
+          <div class="section-title-row">
+            <div>
+              <h2>Integrity Verification & Audit Ledger</h2>
+              <p class="section-subtitle">Cryptographic SHA-256 evidence verification and append-only audit trail from the <code>audit_logs</code> collection.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-primary" id="btnRunFullIntegrityScan">Run Full Integrity Scan</button>
+              <button class="btn btn-outline" id="btnSimulateTamper">Simulate Tamper (Test Fixture)</button>
+            </div>
+          </div>
+
+          <!-- Integrity Scanner Status Banner -->
+          <div class="integrity-status-banner mt-3" id="integrityStatusBanner">
+            <div class="status-banner-left">
+              <span class="shield-icon-badge" id="shieldStatusBadge">✓</span>
+              <div>
+                <h4 id="integrityVerdictHeading">System Evidence Integrity Verified</h4>
+                <p id="integrityVerdictSub">All cryptographic SHA-256 hashes match stored genesis payloads in MongoDB.</p>
+              </div>
+            </div>
+            <div class="status-banner-stats">
+              <div class="banner-stat"><span>Total Audited:</span> <strong id="auditTotalDocs">-</strong></div>
+              <div class="banner-stat"><span>Verified:</span> <strong class="text-emerald" id="auditVerifiedCount">-</strong></div>
+              <div class="banner-stat"><span>Violations:</span> <strong class="text-rose" id="auditViolationsCount">0</strong></div>
+            </div>
+          </div>
+
+          <!-- Append-Only Audit Trail Table -->
+          <div class="clean-card mt-4">
+            <div class="card-head-row">
+              <h3>Append-Only Chain-of-Custody & Audit Logs</h3>
+              <span class="font-mono text-muted text-xs">collection: audit_logs (append-only)</span>
+            </div>
+            <div class="table-wrap mt-2">
+              <table class="clean-data-table">
+                <thead>
+                  <tr>
+                    <th>Log ID</th>
+                    <th>Evidence / Target ID</th>
+                    <th>Action</th>
+                    <th>Actor</th>
+                    <th>Timestamp</th>
+                    <th>Previous Hash</th>
+                    <th>Resulting Hash</th>
+                    <th>Reason / Details</th>
+                  </tr>
+                </thead>
+                <tbody id="auditLogsTableBody">
+                  <tr><td colspan="8" class="text-center text-muted">Loading audit records from MongoDB...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 8. SCHEMA BENCHMARK EXPERIMENT -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-experiments">
+          <div class="section-title-row">
+            <div>
+              <h2>MongoDB Schema Benchmarking Lab</h2>
+              <p class="section-subtitle">Empirically evaluate <strong>Embedded</strong> vs. <strong>Referenced</strong> vs. <strong>Hybrid Time-Bucket</strong> models on WiredTiger storage overhead, query latencies, and accuracy.</p>
+            </div>
+            <div class="benchmark-run-bar">
+              <div class="config-pair">
+                <span class="config-label">Dataset Items:</span>
+                <select id="benchItemCount" class="select-field" style="width: 110px;">
+                  <option value="500">500 items</option>
+                  <option value="1500" selected>1,500 items</option>
+                  <option value="5000">5,000 items</option>
+                  <option value="15000">15,000 items</option>
+                </select>
+              </div>
+              <div class="config-pair">
+                <span class="config-label">Iterations:</span>
+                <select id="benchIterations" class="select-field" style="width: 80px;">
+                  <option value="5">5 runs</option>
+                  <option value="15" selected>15 runs</option>
+                  <option value="30">30 runs</option>
+                </select>
+              </div>
+              <button id="btnRunBenchmark" class="btn btn-primary">Run Benchmark</button>
+            </div>
+          </div>
+
+          <div id="benchmarkLoading" class="loading-state-bar hidden">
+            <div class="clean-spinner"></div>
+            <span>Executing WiredTiger collStats analysis and latency percentiles...</span>
+          </div>
+
+          <!-- 3 Schema Models Comparison Cards -->
+          <div class="models-summary-grid mt-4">
+            <div class="model-card">
+              <div class="model-badge badge-amber">MODEL 1</div>
+              <h4>Embedded Document</h4>
+              <p class="model-explanation">Array embedded inside single case document. Fast single-doc reads, but strictly bound by the 16MB BSON limit.</p>
+              <div class="model-metrics-box">
+                <div class="metric-row"><span>Storage Size:</span> <strong id="embStorageSize">-</strong></div>
+                <div class="metric-row"><span>Index Size:</span> <strong id="embIndexSize">-</strong></div>
+                <div class="metric-row"><span>Reconstruct (p50):</span> <strong id="embReconLat">-</strong></div>
+                <div class="metric-row"><span>Item Update (p50):</span> <strong id="embUpdateLat">-</strong></div>
+                <div class="metric-row"><span>Retrieval Accuracy:</span> <strong id="embAccuracy" class="text-amber">-</strong></div>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-badge badge-blue">MODEL 2</div>
+              <h4>Referenced / Normalized</h4>
+              <p class="model-explanation">Items stored in dedicated collections with indexed foreign keys. Unbounded scale, but requires secondary lookups.</p>
+              <div class="model-metrics-box">
+                <div class="metric-row"><span>Storage Size:</span> <strong id="refStorageSize">-</strong></div>
+                <div class="metric-row"><span>Index Size:</span> <strong id="refIndexSize">-</strong></div>
+                <div class="metric-row"><span>Reconstruct (p50):</span> <strong id="refReconLat">-</strong></div>
+                <div class="metric-row"><span>Item Update (p50):</span> <strong id="refUpdateLat">-</strong></div>
+                <div class="metric-row"><span>Retrieval Accuracy:</span> <strong id="refAccuracy" class="text-emerald">-</strong></div>
+              </div>
+            </div>
+
+            <div class="model-card highlighted-model">
+              <div class="model-badge badge-green">MODEL 3 (RECOMMENDED)</div>
+              <h4>Hybrid Time-Bucket</h4>
+              <p class="model-explanation">Buckets 50 items per document. Reduces collection document count 50x, low index footprint, immune to 16MB limit.</p>
+              <div class="model-metrics-box">
+                <div class="metric-row"><span>Storage Size:</span> <strong id="hybStorageSize">-</strong></div>
+                <div class="metric-row"><span>Index Size:</span> <strong id="hybIndexSize">-</strong></div>
+                <div class="metric-row"><span>Reconstruct (p50):</span> <strong id="hybReconLat">-</strong></div>
+                <div class="metric-row"><span>Item Update (p50):</span> <strong id="hybUpdateLat">-</strong></div>
+                <div class="metric-row"><span>Retrieval Accuracy:</span> <strong id="hybAccuracy" class="text-emerald">-</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparative Benchmark Charts -->
+          <div class="charts-comparison-row mt-4">
+            <div class="chart-panel">
+              <h5>WiredTiger Storage & Index Footprint (KB)</h5>
+              <div class="chart-canvas-wrapper">
+                <canvas id="chartStorage"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel">
+              <h5>Query Latency Comparison (Median p50 ms)</h5>
+              <div class="chart-canvas-wrapper">
+                <canvas id="chartLatency"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Latency Matrix Table -->
+          <div class="table-wrap mt-4">
+            <table class="clean-data-table">
+              <thead>
+                <tr>
+                  <th>Operation</th>
+                  <th>Schema Design</th>
+                  <th>Min (ms)</th>
+                  <th>p50 Median</th>
+                  <th>p95</th>
+                  <th>p99</th>
+                  <th>Max</th>
+                  <th>Accuracy</th>
+                </tr>
+              </thead>
+              <tbody id="benchMatrixTableBody">
+                <tr><td colspan="8" class="text-center text-muted">Execute benchmark to populate latency matrix.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Saved Experiments History -->
+          <div class="clean-card mt-4">
+            <div class="card-head-row">
+              <h3>Saved Benchmark Experiments</h3>
+              <span class="font-mono text-muted text-xs">collection: schema_experiments</span>
+            </div>
+            <div class="table-wrap mt-2">
+              <table class="clean-data-table">
+                <thead>
+                  <tr>
+                    <th>Experiment ID</th>
+                    <th>Items</th>
+                    <th>Iterations</th>
+                    <th>Embedded (p50)</th>
+                    <th>Referenced (p50)</th>
+                    <th>Hybrid (p50)</th>
+                    <th>Accuracy</th>
+                    <th>Recorded</th>
+                  </tr>
+                </thead>
+                <tbody id="experimentsHistoryTableBody">
+                  <tr><td colspan="8" class="text-center text-muted">Loading experiment history...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- 9. SETTINGS & MONGODB DATABASE INSPECTOR -->
+        <!-- ============================================================== -->
+        <section class="view-panel" id="tab-settings">
+          <div class="section-title-row">
+            <div>
+              <h2>MongoDB Database & Live Collections Explorer</h2>
+              <p class="section-subtitle">Direct inspection of active BSON documents, collections metadata, and interactive MQL query execution.</p>
+            </div>
+            <div class="db-actions-header">
+              <button id="btnRefreshDatabase" class="btn btn-outline">Refresh Database</button>
+            </div>
+          </div>
+
+          <!-- Live Connection & Server Stats Card -->
+          <div class="db-hero-card mt-3">
+            <div class="db-hero-left">
+              <div class="db-badge-large">
+                <span class="db-dot-live"></span>
+                <span class="db-status-text">CONNECTED TO LOCAL MONGODB</span>
+              </div>
+              <div class="db-uri-display">
+                <span class="uri-label">URI:</span>
+                <code class="uri-code" id="dbUriCode">mongodb://127.0.0.1:27017/mongotrace</code>
+                <button class="btn btn-sm btn-outline btn-copy-uri" id="btnCopyUri" title="Copy Connection String">Copy URI</button>
+                <button class="btn btn-sm btn-primary btn-copy-mongosh" id="btnCopyMongosh" title="Copy mongosh CLI command">Copy mongosh Command</button>
+              </div>
+              <div class="db-quick-cli">
+                <span>Direct Compass Connection:</span>
+                <code class="font-mono">mongodb://localhost:27017</code>
+              </div>
+            </div>
+
+            <div class="db-hero-stats">
+              <div class="db-stat-item">
+                <span class="stat-lbl">SERVER VERSION</span>
+                <span class="stat-val font-mono" id="dbServerVersion">v8.3.11</span>
+              </div>
+              <div class="db-stat-item">
+                <span class="stat-lbl">DATABASE</span>
+                <span class="stat-val font-mono text-emerald" id="dbNameVal">mongotrace</span>
+              </div>
+              <div class="db-stat-item">
+                <span class="stat-lbl">COLLECTIONS</span>
+                <span class="stat-val font-mono" id="dbCollectionsCount">11</span>
+              </div>
+              <div class="db-stat-item">
+                <span class="stat-lbl">STORAGE FOOTPRINT</span>
+                <span class="stat-val font-mono" id="dbStorageSize">0.82 MB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Collection Selector Chips -->
+          <div class="collection-pills-bar mt-4">
+            <span class="pill-title">COLLECTIONS:</span>
+            <div class="collection-pills-container" id="collectionPillsList">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Two-column: Documents Explorer & Interactive MQL Query Runner -->
+          <div class="db-workspace-grid mt-4">
+            
+            <!-- Left Column: Raw BSON Document Viewer -->
+            <div class="db-documents-panel">
+              <div class="panel-header-row">
+                <div class="panel-title-group">
+                  <h3 id="currentCollectionHeading">collection: evidence</h3>
+                  <span class="collection-doc-badge font-mono" id="collectionDocsCount">0 documents</span>
+                </div>
+                
+                <div class="doc-query-controls">
+                  <input type="text" id="docFilterInput" class="input-field font-mono" placeholder='Filter e.g. {"severity": "CRITICAL"}' title="JSON filter query">
+                  <select id="docLimitSelect" class="select-field">
+                    <option value="10">Limit 10</option>
+                    <option value="25" selected>Limit 25</option>
+                    <option value="50">Limit 50</option>
+                  </select>
+                  <button id="btnApplyFilter" class="btn btn-sm btn-primary">Find</button>
+                  <button id="btnClearFilter" class="btn btn-sm btn-outline">Clear</button>
+                </div>
+              </div>
+
+              <div class="doc-latency-notice font-mono" id="docQueryLatency">
+                <span>Query executed via <code>db.collection.find()</code> in <strong id="queryDurationMs">0.00ms</strong></span>
+              </div>
+
+              <!-- Document List Container -->
+              <div class="documents-stream-container" id="documentsStream">
+                <p class="placeholder-note">Loading collections from MongoDB localhost:27017...</p>
+              </div>
+            </div>
+
+            <!-- Right Column: Interactive MQL Query Console -->
+            <div class="db-console-panel">
+              <div class="panel-header-row">
+                <h3>Interactive MQL Query Runner</h3>
+                <span class="font-mono text-muted" style="font-size: 11px;">Target: 127.0.0.1:27017</span>
+              </div>
+
+              <p class="panel-subtext">Run ad-hoc MQL read queries or aggregation pipelines directly against your local MongoDB database.</p>
+
+              <div class="query-templates-box mt-2">
+                <span class="templates-label">Quick Templates:</span>
+                <div class="template-btns">
+                  <button class="template-chip" data-col="investigations" data-query='{}'>All Investigations</button>
+                  <button class="template-chip" data-col="evidence" data-query='{"severity":"CRITICAL"}'>Critical Evidence</button>
+                  <button class="template-chip" data-col="audit_logs" data-query='{}'>Audit Trail</button>
+                  <button class="template-chip" data-col="entities" data-query='{}'>Entities</button>
+                  <button class="template-chip" data-col="relationships" data-query='{}'>Relationships</button>
+                  <button class="template-chip" data-col="evidence_vault.files" data-query='{}'>GridFS Files</button>
+                </div>
+              </div>
+
+              <div class="form-control mt-2">
+                <label>Target Collection:</label>
+                <select id="mqlTargetCollection" class="select-field font-mono">
+                  <option value="investigations">investigations</option>
+                  <option value="evidence">evidence</option>
+                  <option value="evidence_versions">evidence_versions</option>
+                  <option value="entities">entities</option>
+                  <option value="relationships">relationships</option>
+                  <option value="ingestion_jobs">ingestion_jobs</option>
+                  <option value="audit_logs">audit_logs</option>
+                  <option value="detection_rules">detection_rules</option>
+                  <option value="derived_findings">derived_findings</option>
+                  <option value="evidence_vault.files">evidence_vault.files</option>
+                  <option value="evidence_vault.chunks">evidence_vault.chunks</option>
+                  <option value="schema_experiments">schema_experiments</option>
+                </select>
+              </div>
+
+              <div class="form-control">
+                <label>MQL Filter Query (JSON):</label>
+                <textarea id="mqlCustomFilter" class="textarea-field font-mono" rows="3">{\n  "severity": "CRITICAL"\n}</textarea>
+              </div>
+
+              <div class="query-actions-row">
+                <button id="btnExecuteMQL" class="btn btn-primary">Execute MQL Query</button>
+                <span id="mqlExecuteTime" class="font-mono text-muted text-sm"></span>
+              </div>
+
+              <div class="query-output-box mt-2">
+                <div class="output-header">
+                  <span>Result Output</span>
+                  <button id="btnCopyQueryResult" class="btn btn-sm btn-ghost">Copy JSON</button>
+                </div>
+                <pre class="query-output-json font-mono" id="mqlOutputResult">// Execute query to inspect output documents.</pre>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODALS -->
+  <!-- ============================================================== -->
+
+  <!-- Modal: Create Investigation -->
+  <div class="modal-backdrop hidden" id="modalCreateInvestigation">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create New Investigation</h3>
+        <button class="btn-close-modal" id="btnCloseCreateInvModal">✕</button>
+      </div>
+      <form id="formCreateInvestigation">
+        <div class="modal-body">
+          <div class="form-control">
+            <label>Investigation Title:</label>
+            <input type="text" id="newInvTitle" class="input-field" placeholder="e.g. Operation PhishStorm: Supply Chain Credential Compromise" required>
+          </div>
+          <div class="form-row">
+            <div class="form-control" style="flex: 1;">
+              <label>Severity:</label>
+              <select id="newInvSeverity" class="select-field">
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH" selected>High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+            <div class="form-control" style="flex: 1;">
+              <label>Status:</label>
+              <select id="newInvStatus" class="select-field">
+                <option value="Open" selected>Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Under Review">Under Review</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-control" style="flex: 1;">
+              <label>Suspected Threat Actor:</label>
+              <input type="text" id="newInvThreatActor" class="input-field" placeholder="e.g. APT29, FIN7, Unknown">
+            </div>
+            <div class="form-control" style="flex: 1;">
+              <label>Assigned Investigator:</label>
+              <input type="text" id="newInvInvestigator" class="input-field" value="Forensic Analyst" required>
+            </div>
+          </div>
+          <div class="form-control">
+            <label>Investigation Overview / Hypothesis:</label>
+            <textarea id="newInvDescription" class="textarea-field" rows="3" placeholder="Summary of the initial alert, scope, and objectives..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelCreateInv">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create & Persist to MongoDB</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Version Evidence Item -->
+  <div class="modal-backdrop hidden" id="modalEditEvidence">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Version Evidence Item (ACID Audit Update)</h3>
+        <button class="btn-close-modal" id="btnCloseEditModal">✕</button>
+      </div>
+      <form id="formEditEvidence">
+        <div class="modal-body">
+          <input type="hidden" id="editEvidenceId">
+          <div class="form-control">
+            <label>Evidence Title:</label>
+            <input type="text" id="editTitle" class="input-field" required>
+          </div>
+          <div class="form-row">
+            <div class="form-control" style="flex: 1;">
+              <label>Severity:</label>
+              <select id="editSeverity" class="select-field">
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+            <div class="form-control" style="flex: 1;">
+              <label>Auditing Actor:</label>
+              <input type="text" id="editActor" class="input-field" value="Forensic-Investigator" required>
+            </div>
+          </div>
+          <div class="form-control">
+            <label>Reason for Modification:</label>
+            <input type="text" id="editReason" class="input-field" placeholder="e.g. Threat Intelligence Hash Correlation" required>
+          </div>
+          <div class="form-control">
+            <label>Polymorphic BSON Metadata (JSON):</label>
+            <textarea id="editMetadata" class="textarea-field font-mono" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelEdit">Cancel</button>
+          <button type="submit" class="btn btn-primary">Commit Version Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Upload Binary to GridFS -->
+  <div class="modal-backdrop hidden" id="modalUploadGridFS">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Upload Forensic Artifact to GridFS Vault</h3>
+        <button class="btn-close-modal" id="btnCloseUploadModal">✕</button>
+      </div>
+      <form id="formUploadGridFS">
+        <div class="modal-body">
+          <div class="form-control">
+            <label>Select Forensic File (PCAP, Memory Dump, Disk Image):</label>
+            <input type="file" id="gridfsFileInput" class="input-field" required>
+          </div>
+          <div class="form-control">
+            <label>Link to Evidence ID (optional):</label>
+            <input type="text" id="gridfsLinkEvidenceId" class="input-field font-mono" placeholder="e.g. EV-APT29-001">
+          </div>
+          <div class="form-control">
+            <label>File Description:</label>
+            <textarea id="gridfsDescription" class="textarea-field" rows="2" placeholder="e.g. Raw memory dump from domain controller"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelUpload">Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload to GridFS</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="graph.js?v=enterprise_v1"></script>
+  <script src="benchmarkChart.js?v=enterprise_v1"></script>
+  <script src="app.js?v=enterprise_v1"></script>
+</body>
+</html>
