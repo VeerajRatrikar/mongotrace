@@ -183,6 +183,24 @@ NODE_ENV=development
 FRONTEND_URL=http://localhost:5050
 ```
 
+### Free hosted deployment (Render + MongoDB Atlas)
+This project is ready to deploy to Render using Docker. The repository includes a `render.yaml` configuration and a `Dockerfile` that run the app on port `8080` in production.
+
+1. Create a free MongoDB Atlas cluster and copy its connection string.
+2. Sign in to Render with your Google account.
+3. Import this repository into Render.
+4. Set environment variables in Render:
+   ```env
+   MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/mongotrace
+   DB_NAME=mongotrace
+   NODE_ENV=production
+   PORT=8080
+   FRONTEND_URL=https://your-app.onrender.com
+   ```
+5. Deploy the service.
+
+This avoids a local MongoDB install and keeps the app available on a public HTTPS URL.
+
 ---
 
 ## 🛠️ Troubleshooting
